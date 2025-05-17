@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
 
+
 public class User extends AbstractModel {
 
     private final String name;
@@ -36,7 +37,7 @@ public class User extends AbstractModel {
     }
 
     private void validateMoneyLack(BigDecimal sum, Operation operation) throws MoneyLackException {
-        if (balance.compareTo(sum) < 0) {
+        if (sum.compareTo(balance) > 0) {
             operation.setFailed(true);
             throw new MoneyLackException(this, operation, sum);
         }
@@ -58,13 +59,15 @@ public class User extends AbstractModel {
     }
 
     public synchronized void transfer(User recipient, BigDecimal sum, Operation operation) throws NegativeSumException, MoneyLackException {
-        validateNegativeSum(sum, operation);
-        validateMoneyLack(sum, operation);
-        balance = balance.subtract(sum);
-        if (recipient.getBalance() == null) {
-            return;
+        if (balance != null) {
+            validateNegativeSum(sum, operation);
+            validateMoneyLack(sum, operation);
+            balance = balance.subtract(sum);
         }
-        recipient.setBalance(recipient.getBalance().add(sum));
+        if (recipient.getBalance() != null) {
+            recipient.setBalance(recipient.getBalance().add(sum));
+        }
+
     }
 
     @Override

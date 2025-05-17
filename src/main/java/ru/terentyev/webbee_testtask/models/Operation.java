@@ -55,17 +55,17 @@ public class Operation extends AbstractModel {
     }
 
     public void perform(){
-        if (type == OperationType.BALANCE_INQUIRY) {
-            user.balanceInquiry(sum);
-        }
-        if (user.getBalance() == null) {
-            return;
-        }
         try {
-            if (type == OperationType.DEPOSIT) {
-                user.deposit(sum, this);
+            if (type == OperationType.BALANCE_INQUIRY) {
+                user.balanceInquiry(sum);
             } else if (type == OperationType.TRANSFER) {
                 user.transfer(recipient, sum, this);
+            }
+            if (user.getBalance() == null) {
+                return;
+            }
+            if (type == OperationType.DEPOSIT) {
+                user.deposit(sum, this);
             } else if (type == OperationType.WITHDRAW) {
                 user.withdraw(sum, this);
             }
